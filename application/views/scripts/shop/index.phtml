@@ -1,0 +1,19 @@
+<table class="table table-bordered">
+  <tr>
+  	<th>ID</th>
+  	<th>Название</th>
+  	<th>Цена</th>
+  	<th>Действия</th>
+  </tr>
+  <?php foreach ($this->paginator as $item){?>
+  <tr>
+  	<td><?php echo $item['id']?></td>
+  	<td><?php echo $item['name']?></td>
+  	<td><?php echo round($item['cost'],2);?></td>
+  	<td><a class="btn btn-info " href="/shop/edit/id/<?php echo $item['id']?>"><i class="icon-edit icon-white"></i>Edit</a>
+		<a class="btn btn-danger confirmation" href="/shop/delete/id/<?php echo $item['id']?>"><i class="icon-trash icon-white"></i>Delete</a>
+	</td>
+  </tr>
+  <?php }?>
+</table>
+<?php  echo $this->paginationControl($this->paginator,'Sliding','mypage.phtml');?>

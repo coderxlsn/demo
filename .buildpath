@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<buildpath>
+	<buildpathentry kind="src" path="tests"/>
+	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
+	<buildpathentry kind="src" path="public"/>
+	<buildpathentry including="My/|Twitter/|Zend/" kind="src" path="library"/>
+	<buildpathentry including="*|Bootstrap.php|configs/|controllers/|forms/|layouts/|models/|plugins/|resources/|views/" kind="src" path="application"/>
+</buildpath>

@@ -1,0 +1,333 @@
+<?php 
+$sport = (isset($this->in['id_sport'])?$this->in['id_sport']:null);
+$country = (isset($this->in['id_country'])?$this->in['id_country']:null);
+$league= (isset($this->in['id_league'])?$this->in['id_league']:null);
+$date = (isset($this->in['date'])?$this->in['date']:null);
+$fsport =  $this->formSelect('id_sport',$sport,array('data-rel'=>'chosen','style'=>'width:209px'),$this->sports);
+$fcontry = $this->formSelect('id_country',$country,array('data-rel'=>'chosen'),$this->country);
+$fleague = $this->formSelect('id_league',$league,array('data-rel'=>'chosen','multiple'=>true),$this->league);
+?>
+<style>
+.chzn-container
+{
+width:209px;
+}
+.control-group {
+margin:0;
+}
+form {
+margin:0;
+}
+.search2 {
+	margin-top:5px;
+}
+.testid {
+float:right
+}
+.iPhoneCheckContainer
+{
+display: inline-block;
+}
+.table tr, .table td {
+vertical-align: middle;
+}
+</style>
+
+<link href="/member/css/simple.css" media="screen" rel="stylesheet" type="text/css" >
+<link href="/member/css/cusel.css" media="screen" rel="stylesheet" type="text/css" >
+<link href="/member/css/jquery.arcticmodal-0.3.css" media="screen" rel="stylesheet" type="text/css" >
+<script type="text/javascript" src="/member/js/jquery.arcticmodal-0.3.min.js"></script>
+<script type="text/javascript" src="/member/js/cusel.js"></script>
+
+
+<script type="text/javascript">
+<!--
+$('#exampleModal1').arcticmodal();
+$('#myCopyPaste').arcticmodal();
+
+$(function() {
+	$( "#from" ).datepicker({
+	 //defaultDate: "+1w",
+		 //changeMonth: true,
+		 numberOfMonths: 2,
+		 dateFormat: "dd.mm.yy",
+		 onClose: function( selectedDate ) {
+		 	$( "#to" ).datepicker( "option", "minDate", selectedDate );
+			$( "#range_from" ).val($( "#from" ).val());
+			
+		 }
+	});
+	$( "#to" ).datepicker({
+		 defaultDate: "+1w",
+		 //changeMonth: true,
+		 numberOfMonths: 2,
+		 dateFormat: "dd.mm.yy",
+		 onClose: function( selectedDate ) {
+		 	$( "#from" ).datepicker( "option", "maxDate", selectedDate );
+		 	$( "#range_to" ).val($( "#to" ).val());
+		 }
+	});
+	$( "#from" ).datepicker( "option", "minDate",  new Date(<?php echo date('Y')?>, <?php echo date('m')-1?>, <?php echo date('d')?>)  );
+	$( "#to" ).datepicker( "option", "minDate", new Date(<?php echo date('Y')?>, <?php echo date('m')-1?>, <?php echo date('d')?>)  );
+	$('option[value="range"]').on('click',function(e){
+		var period = $('#period_date').val();
+		if(period == 'range')
+		{
+			$('#myModal').modal('show');
+		}
+	});
+	
+});
+
+$(document).ready(function(){
+	$('.testid').click(function(e){
+		$('#myCopyPaste').arcticmodal();
+		
+	});
+	  
+	$('.iphone-toggle2').iphoneStyle({
+	    onChange: function(input) { 
+	        var status = input[0].checked;
+	        var id = input.val();
+	        $.post( "/members/links/ajax", { id: id, status: status } );
+	        if(status == true){
+		        var buttom = '<span class="testid"><a href="#" data-id="'+id+'" class="btn btn-primary showlink"><i class="icon-share icon-white"></i></a></span>';
+		        $(input).parent().parent().append( buttom );
+	        }else {
+	        	$(input).parent().parent().find('.testid').remove();
+	        }
+		    initpopap();    
+	    }
+	});
+	
+	
+	$('input[type="checkbox"]').each(function(index) {
+		
+		if($(this).is(':checked') == true){
+			var id = $(this).val();
+			var buttom = '<span class="testid"><a href="#" data-id="'+id+'" class="btn btn-primary showlink"><i class="icon-share icon-white"></i></a></span>';
+	        $(this).parent().parent().append( buttom );
+		}
+	});
+	function initpopap() {
+		$('.testid').on('click','.showlink',function(e){
+			e.preventDefault();
+			
+			$('#myCopyPaste').arcticmodal();
+			var href = $(this).parent().parent().parent().parent().find('a.export').attr('href');
+			$('#source').val('');
+			$('#source').val(href);
+			
+			
+		}); 
+	}
+	initpopap();
+	var _defaults = {
+		    moviePath: "/member/js/ZeroClipboard.swf"
+	};
+	var clip = new ZeroClipboard( $("#copyButton"),_defaults);
+
+	//clip.glue( $("#copyButton") );
+});
+
+jQuery(document).ready(function(){
+var params = {
+		changedEl: "select#period_date",
+	}
+	cuSel(params);
+});
+
+//clip.glue('copyButton','copyButtonСontainer'); 
+//-->
+</script>
+
+
+<div class="row-fluid sortable ui-sortable">	
+	<div class="box span12">
+		<div class="box-header well" data-original-title>
+			<h2>Матчи</h2>
+		</div>
+		<div class="box-content">
+		<table class="table table-bordered ">
+		<tr>
+		<td>
+		
+		
+			<form  method="get">
+				<div class="row-fluid">
+					<div class="span2">
+						<div class="control-group">
+								<label class="control-label" for="selectError1">Дата</label>
+								<div class="controls">
+								  <?php //echo $fsport;?>
+								  <select name="date" style="width: 120px;" id="period_date" >
+									  <option value="all" <?php if($date == 'all' || !isset($date)) {echo 'selected';}?>>Все время</option>
+									  <option value="now" <?php if($date == 'now') {echo 'selected';}?>>Сегодня</option>
+									  <option value="tomorow" <?php if($date == 'tomorow') {echo 'selected';}?>>Завтра</option>
+									  <option value="weeks" <?php if($date == 'weeks') {echo 'selected';}?>>Неделя</option>
+									  <option value="mouth" <?php if($date == 'mouth') {echo 'selected';}?>>Месяц</option>
+									  
+									  <option id="example1" onclick="$('#exampleModal1').arcticmodal()" value="range" <?php if($date == 'range') {echo 'selected';}?>>Выбрать дату...</option>
+									  <option value="active" <?php if($date == 'active') {echo 'selected';}?>>Только активные заказы</option>
+								  </select>
+								  
+								  
+								  <input type="hidden" name="range_from" id="range_from" value="<?php echo $this->from?>" />
+								  <input type="hidden" name="range_to" id="range_to" value="<?php echo $this->to?>" />
+								</div>
+					  	</div>
+					</div>
+					<div class="span3">
+						<div class="control-group">
+							<label class="control-label" for=id_sport>Вид спорта</label>
+							<div class="controls">
+							  <?php echo $fsport;?>
+							</div>
+				  		</div>
+					</div>
+					<div class="span3">
+						<div class="control-group">
+							<label class="control-label" for="id_country">Страна</label>
+							<div class="controls">
+							<?php echo $fcontry?>
+							</div>
+				  		</div>
+					</div>
+					<div class="span3">
+						<div class="control-group">
+							<label class="control-label" for="id_league">Лиги</label>
+							<div class="controls">
+								
+								 	<?php echo $fleague;?>
+								  	
+								 
+							</div>
+				  		</div>
+					</div>
+					<div class="span1">
+						<div class="control-group">
+							<label class="control-label">&nbsp;</label>
+							<div class="controls">
+								<button class="btn btn-primary "  type="submit">Искать</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				</form>
+		</td>
+		</tr>
+		</table>
+		<table class="table table-bordered ">
+	
+		<tr>
+		<td>
+		
+		<form  method="get" class="search2">
+				<div class="row-fluid">
+				
+				<div class="span11">
+						<div class="control-group">
+						 	
+							<div class="controls">
+								<input id="appendedInputButtons" placeholder="Поиск по названию" style="width: 100%;" size="16" type="text" value="<?php if (isset($this->in['q'])) { echo $this->in['q'];}?>" name="q">
+							</div>
+						</div>
+					</div>
+					<div class="span1">
+						<button class="btn btn-primary " type="submit">Искать</button>
+					</div>
+				</div>
+</form>
+				</td>
+		</tr>
+		</table>
+			<h3><?php echo $this->h1?></h3>
+			<table class="table table-bordered table-striped table-condensed">
+							  <thead>
+								  <tr>
+									  <th>Id</th>
+									  <th>Вид спорта</th>
+									  <th>Лига</th>
+									  <th>Название</th>
+									  <th>Дата</th>
+									  
+									  <th>Начало</th> 
+									  <th>Заказать</th>
+								  </tr>
+							  </thead>   
+							  <tbody>
+								<tr>
+								<?php foreach ($this->paginator as $item){
+									$start = $this->myDate()->set($item['date_start']);
+								echo '<tr>'.PHP_EOL;
+								echo '<td>'.$item['id'].'</td>'.PHP_EOL;
+								echo '<td>'.$item['sname'].'</td>'.PHP_EOL;
+								echo '<td>'.$item['lname'].'</td>'.PHP_EOL;
+								echo '<td><a class="export" target="_blank" href="'.$item['url'].'?ref='.$this->indentity->id.'">'.$item['name'].'</a></td>'.PHP_EOL;
+								echo '<td>'.$start->get('dd.MM.YYYY').'</td>'.PHP_EOL;
+								echo '<td>'.$start->get('HH:mm').'</td>'.PHP_EOL;
+								echo '<td style="width:140px"><div style="width:140px"><input data-no-uniform="true" type="checkbox" data-id="'.$item['id'].'" name="status[]" value="'.$item['id'].'" '.($item['tstatus'] == 1?'checked':'').' class="iphone-toggle2"></div></td>';
+								echo '</tr>'.PHP_EOL;
+								}
+									?>
+								
+								
+								</tr>
+								</tbody>
+								</table>
+								<?php  echo $this->paginationControl($this->paginator,'Sliding','mypage.phtml');?>
+		</div>
+	</div>
+</div>
+
+<div style="display:none;">
+	<div class="box-modal" id="exampleModal1">
+			<div class="modal-header">
+				<div class="box-modal_close arcticmodal-close">закрыть</div>
+				<h3>Выберите дату</h3>
+			</div>
+			<div class="modal-body">
+			<div class="row-fluid">
+				<div class="span6">
+					<div class="control-group">
+							<label for="from">От</label>
+							<div class="controls">
+								<input type="text" id="from" name="from" value="<?php echo $this->from?>" />
+							</div>
+					</div>
+				</div>
+				<div class="span6">
+					<div class="control-group">
+							<label for="to">До</label>
+							<div class="controls">
+								<input type="text" id="to" name="to" value="<?php echo $this->to?>" />
+							</div>
+					</div>
+				</div>
+			</div>
+			</div>
+			<div class="modal-footer">
+				<a href="#" class="btn" onclick="$('#exampleModal1').arcticmodal('close');">Закрыть</a>
+				<a href="#" class="btn btn-primary" onclick="$('#exampleModal1').arcticmodal('close');">Применить</a>
+			</div>
+	</div>
+
+	<div class="box-modal" id="myCopyPaste">
+		<div class="modal-header">
+			<div class="box-modal_close arcticmodal-close">закрыть</div>
+			<h3>Скопировать ссылку</h3>
+		</div>
+		<div class="modal-body">
+			<div class="row=fluid">
+				<div class="span12">
+				<textarea style=" height: 75px; width: 440px;" id="source"></textarea>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<a class="btn btn-primary" id="copyButton"  data-clipboard-target="source">Копировать в буфер</a>
+			<a href="#" class="btn" onclick="$.arcticmodal('close');">Закрыть</a>
+		</div>
+	</div>
+</div>

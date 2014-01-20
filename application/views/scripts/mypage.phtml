@@ -1,0 +1,71 @@
+<?php 
+$query = $_GET;
+$url ="?";
+$url .=  http_build_query($query);
+
+?>
+
+
+<?php if ($this->pageCount): ?>
+
+
+<ul class="pagination">
+<!-- Ссылка на предыдущую страницу -->
+
+<?php if (isset($this->previous)): ?>
+
+  <li><a href="<?php echo $this->url(array('page' => $this->previous)).$url; ?>">
+
+    &lt; 
+
+  </a></li> 
+
+<?php else: ?>
+
+  <li class="active"><a href="#" class="disabled">&lt; </a></li>
+
+<?php endif; ?>
+
+ 
+
+<!-- Нумерованные ссылки на страницы -->
+
+<?php foreach ($this->pagesInRange as $page): ?>
+
+  <?php if ($page != $this->current): ?>
+
+    <li><a href="<?php echo $this->url(array('page' => $page)).$url; ?>">
+
+        <?php echo $page; ?>
+
+    </a></li>
+
+  <?php else: ?>
+
+    <li class="active"><span><?php echo $page; ?></span></li>
+
+  <?php endif; ?>
+
+<?php endforeach; ?>
+
+ 
+
+<!-- Ссылка на следующую страницу -->
+
+<?php if (isset($this->next)): ?>
+
+  <li><a href="<?php echo $this->url(array('page' => $this->next)).$url; ?>">
+
+    &gt;
+
+  </a></li>
+
+<?php else: ?>
+
+  <li class="active"><a href="#" class="disabled"> &gt;</a></li>
+
+<?php endif; ?>
+</ul>
+</div>
+
+<?php endif; ?>
